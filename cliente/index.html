@@ -1,0 +1,55 @@
+<form id="numeroForm">
+    <div>
+        <label for="numero">Introduce el número para el factorial</label>
+        <input name="numero" id="numero" value="0" />
+    </div>
+    <div>
+        <button id="enviar">Enviar</button>
+    </div>
+    <div>
+        <div id="respuesta"></div>
+    </div>
+</form>
+
+<script>
+    // Casuística 1: Click del botón
+    enviar.onclick = async e => {
+        const response = await fetch('http://localhost:3000/factorial2', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const text = JSON.parse(await response.text());
+        document.querySelector('#respuesta').innerHTML =
+            text.status === 1
+                ? `El factorial de ${text.input} es ${text.result}`
+                : `${text.input} ${text.result}!`;
+    }
+
+    // Casuística 2: Submit del formulario
+    numeroForm.onsubmit = async e => {
+        e.preventDefault();
+        const form = document.querySelector('#numeroForm');
+        const data = {
+            numero: form.querySelector('input[name="numero"]').value
+        };
+
+        // Validación: Prevenir string vacío
+        if (data.numero === '') {
+            data.numero = 0;
+        }
+
+        const response = await fetch('http://localhost:3000/factorial2', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        const text = await response.text();
+        document.querySelector('#respuesta').innerHTML = text;
+    }
+</script>
