@@ -116,7 +116,7 @@
 <script>
     // Casuística 1: Click del botón
     enviar.onclick = async e => {
-        const response = await fetch('http://localhost:3000/factorial2', {
+        const response = await fetch('http://localhost:3000/factorialFinal', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -144,7 +144,7 @@
             data.numero = 0;
         }
 
-        const response = await fetch('http://localhost:3000/factorial2', {
+        const response = await fetch('http://localhost:3000/factorialFinal', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

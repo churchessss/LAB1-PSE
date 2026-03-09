@@ -28,7 +28,8 @@ app.get('/factorial/:num', (req: Request, res: Response) => {
 });
 
 // Definición de endpoint factorial mejorado (con manejo de errores)
-app.post('/factorial2', async(req:Request, res:Response) => {
+
+app.post('/factorial2', (req, res) => {
     console.log(req.body);
     const status = isNaN(req.body.numero) ? 0 : 1;
     if (status === 0) {
@@ -38,21 +39,37 @@ app.post('/factorial2', async(req:Request, res:Response) => {
             result: 'no es un número!'
         });
     } else {
-
-        const resultado = factorial(req.body.numero);
-
-        await prisma.factorial.create({
-            data: {
-                base: req.body.numero.toString(),
-                usuario: req.body.nombreUsuario && req.body.nombreUsuario.trim() !== "" ? req.body.nombreUsuario : "Anónimo"
-            }
-        });
-
         res.status(200).json({
             status,
             input: req.body.numero,
-            result: resultado
+            result: factorial(req.body.numero)
         });
+    }
+});
+
+// Definición de endpoint factorial mejorado (con persistencia)
+app.post('/factorialFinal', async(req:Request, res:Response) => {
+    try {
+        const { numero, nombreUsuario } = req.body;
+        const numeroAsNumber: number = Number(numero);
+
+        if (isNaN(numeroAsNumber) || numeroAsNumber < 0) {
+            return res.status(400).send("El número debe ser un entero y positivo");
+        }
+
+        const resultado = factorial(numeroAsNumber);
+
+        await prisma.factorial.create({
+            data: {
+                base: numeroAsNumber.toString(),
+                usuario: nombreUsuario && nombreUsuario.trim() !== "" ? nombreUsuario : "Anónimo"
+            }
+        });
+
+        res.status(200).send(`El factorial de ${numeroAsNumber} es ${resultado}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error interno del servidor");
     }
 });
 
