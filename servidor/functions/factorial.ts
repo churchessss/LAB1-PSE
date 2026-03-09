@@ -1,8 +1,8 @@
 // Implementación como función lambda y con condicionales ternarias
-const factorial = (num) => num === 0 ? 1 : num * factorial(num - 1);
+export const factorial = (num:number): number => num=== 0 ? 1 : num * factorial(num - 1);
 
 // Es el equivalente a...
-function classicFactorial(num) {
+function classicFactorial(num:number):number {
     if (num === 0) {
         return 1;
     } else {

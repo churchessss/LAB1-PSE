@@ -1,8 +1,8 @@
-
 import express from 'express';
+import type { Request, Response } from 'express';
 import cors from 'cors';
 import factorial from './functions/factorial.js';
-
+import { prisma } from "./lib/db";
 
 //Instanciamos Express
 const app = express();
@@ -11,17 +11,24 @@ app.use(express.json());
 app.use(cors());
 
 // Definición de endpoint inicial
-app.get('/', (req, res) => {
+app.get('/', (req:Request, res:Response) => {
     res.send("Hola mundo");
 });
 
 // Definición de endpoint factorial
-app.get('/factorial/:num', (req, res) => {
-    res.send(`El factorial de ${req.params.num} es ${factorial(req.params.num)}`);
-})
+app.get('/factorial/:num', (req: Request, res: Response) => {
+  const numero = Number(req.params.num);
+
+  if (Number.isNaN(numero)) {
+    return res.status(500).send("No es un número");
+  }
+
+  const resultado = factorial(numero);
+  return res.send(`El factorial de ${numero} es ${resultado}`);
+});
 
 // Definición de endpoint factorial mejorado (con manejo de errores)
-app.post('/factorial2', (req, res) => {
+app.post('/factorial2', async(req:Request, res:Response) => {
     console.log(req.body);
     const status = isNaN(req.body.numero) ? 0 : 1;
     if (status === 0) {
@@ -31,10 +38,20 @@ app.post('/factorial2', (req, res) => {
             result: 'no es un número!'
         });
     } else {
+
+        const resultado = factorial(req.body.numero);
+
+        await prisma.factorial.create({
+            data: {
+                base: req.body.numero.toString(),
+                usuario: req.body.nombreUsuario && req.body.nombreUsuario.trim() !== "" ? req.body.nombreUsuario : "Anónimo"
+            }
+        });
+
         res.status(200).json({
             status,
             input: req.body.numero,
-            result: factorial(req.body.numero)
+            result: resultado
         });
     }
 });

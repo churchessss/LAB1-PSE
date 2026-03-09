@@ -1,7 +1,109 @@
+
+<style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e0f2fe, #f8fafc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: white;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #0f172a;
+      font-size: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .resultado {
+      margin-top: 24px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 5px solid #2563eb;
+      border-radius: 10px;
+      color: #0f172a;
+    }
+
+    .resultado strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #1e3a8a;
+    }
+
+    #respuesta {
+      font-size: 1.05rem;
+    }
+</style>
+
 <form id="numeroForm">
     <div>
         <label for="numero">Introduce el número para el factorial</label>
         <input name="numero" id="numero" value="0" />
+    </div>
+    <div>
+        <label for="nombreUsuario">Nombre de usuario (opcional)</label>
+        <input name="nombreUsuario" id="nombreUsuario" placeholder="Anónimo" />
     </div>
     <div>
         <button id="enviar">Enviar</button>
@@ -33,7 +135,8 @@
         e.preventDefault();
         const form = document.querySelector('#numeroForm');
         const data = {
-            numero: form.querySelector('input[name="numero"]').value
+            numero: form.querySelector('input[name="numero"]').value,
+            nombreUsuario: form.querySelector('input[name="nombreUsuario"]').value
         };
 
         // Validación: Prevenir string vacío
